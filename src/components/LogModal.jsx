@@ -28,8 +28,6 @@ export default function LogModal() {
               <Tab eventKey="signup" title="Sign Up">
                 <SignUp/>
               </Tab>
-      
-              
             </Tabs>
       </Modal>
     </div>

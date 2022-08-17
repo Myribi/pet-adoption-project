@@ -6,7 +6,6 @@
 
 body{
   background-color: #F6FBFE;
-  overflow: hidden;
 }
 
 
@@ -21,6 +20,8 @@ body{
   font-family: 'Roboto Condensed', sans-serif;
   color: grey;
 }
+
+
 
 .nav-link {
   padding: 10px;
@@ -66,4 +67,100 @@ body{
 
 .type {
   width: 20rem;
+}
+
+.list {
+  margin: 0 10%
+}
+
+.card-to-heart{
+  position: relative;
+ 
+  
+}
+
+.heart-container {
+  position: absolute;
+  right: 0;
+  display: block;
+  padding: 10px 14px;
+  border-radius: 50% 50%;
+  background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.heart-container:hover{
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.heart-container:hover .heart2 {
+  display: block;
+  fill: red;
+  margin: 4px 0;
+  
+}
+
+
+.heart-container:hover .heart{
+  display: none;
+
+}
+
+.heart2 {
+  display: none;
+}
+
+.pet-image {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  border-radius: 30px;
+}
+
+.title {
+  font-weight: 500;
+  opacity: 1 !important;
+  color: black;
+
+}
+.titles{
+  position: absolute;
+  width: 100%;
+  background-color: rgba(225, 225, 225, 0.4);
+  border-radius: 0 0 30px 30px;
+  bottom: 0;
+}
+
+/* .image-container{
+  justify-content: center;
+} */
+
+.pet-profile-image{
+  object-fit: cover;
+  object-position: center bottom;
+  height: 30vw;
+  width: 30vw;
+  border-radius: 50%;
+
+}
+
+
+.pet-btn{
+  border-radius: 5px;
+  background-color: #36F214 ;
+}
+
+.pet-name{
+  color: #36F214;
+}
+
+.card {
+  border-radius: 31px;
+}
+
+.buttons {
+  gap: 1rem;
+}
+
+.saddog {
+  transform: scale(1);
 }
