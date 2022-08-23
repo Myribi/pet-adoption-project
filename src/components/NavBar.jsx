@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Button } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import LogModal from "../components/LogModal";
+import GeneralContext from '../contexts/CreateContext';
+
 
 export default function NavBar() {
+
+  const {setToken} = useContext(GeneralContext)
+
+  function logout () {
+    setToken("")
+    localStorage.clear()
+  }
+
   return (
     <>
     <Navbar className="opacity-100" variant="light">
@@ -14,6 +25,7 @@ export default function NavBar() {
             <Link to="/" className='text-decoration-none nav-link'>Home</Link>
             <Nav.Link className='align-self-center'><LogModal/></Nav.Link>
             <Link to="/search" className='text-decoration-none nav-link'>Search</Link>
+            <Button className='text-decoration-none nav-link' onClick={logout}>logout</Button>
           </Nav>
         </Container>
       </Navbar>

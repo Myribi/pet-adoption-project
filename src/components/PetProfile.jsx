@@ -1,17 +1,27 @@
-import React from "react";
-import { useContext } from "react";
-import GeneralContext from "../contexts/CreateContext";
-import {useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function PetProfile() {
-  const { currentPet } = useContext(GeneralContext);
-
+  const [currentPet, setCurrentPet] = useState({})
+  let location = useLocation();
   let navigate = useNavigate();
+ 
 
   const goingBack = () => {
     navigate("/search");
   };
+
+  const { id } = useParams();
+
+  useEffect(() => {
+  async function getPet() {
+    const res = await axios.get(`http://localhost:8000/pets/${id}`);
+    setCurrentPet(res.data);
+  }
+  getPet();
+  }, [location,id])
+  
 
   return (
     <>
@@ -36,39 +46,22 @@ export default function PetProfile() {
       </div>
 
       <div className="buttons d-flex justify-content-center mt-5">
-        <button
-          className="pet-btn shadow border-0 px-3 py-1" 
-        >
-         Return 
-        </button>
-        <button
-          className="pet-btn shadow border-0 px-3 py-1"
-        >
-        Foster
-        </button>
-        <button
-          className="pet-btn shadow border-0 px-3 py-1"
-        >
-         Adopt
-        </button>
-        <button
-          className="pet-btn shadow border-0 px-3 py-1"
-        >
-         Add to favourites!
+        <button className="pet-btn shadow border-0 px-3 py-1">Return</button>
+        <button className="pet-btn shadow border-0 px-3 py-1">Foster</button>
+        <button className="pet-btn shadow border-0 px-3 py-1">Adopt</button>
+        <button className="pet-btn shadow border-0 px-3 py-1">
+          Add to favourites!
         </button>
       </div>
       <div className="text-center mt-5">
-          <button
-        className="pet-btn shadow border-0 px-3 py-1"
-        onClick={goingBack}
-      >
-        {" "}
-        Go Back!
-      </button>
+        <button
+          className="pet-btn shadow border-0 px-3 py-1"
+          onClick={goingBack}
+        >
+          {" "}
+          Go Back!
+        </button>
       </div>
-    
     </>
   );
 }
-
-

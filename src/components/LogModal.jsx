@@ -5,10 +5,14 @@ import Tabs from "react-bootstrap/Tabs";
 import Login from "./Login";
 import SignUp from "./SignUp";
 
+
 export default function LogModal() {
+  const [activeTab, setActiveTab] = useState("signup")
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
 
   return (
     <div onClick={e => e.stopPropagation()}>
@@ -21,15 +25,20 @@ export default function LogModal() {
             <Tabs
               id="controlled-tab-example"
               className="mb-3 d-flex flex-row ps-3 pt-3"
+              activeKey={activeTab}
+              onSelect = {(e)=> setActiveTab(e)}
             >
-              <Tab eventKey="login" title="Login" className="">
-                <Login/>
+              <Tab eventKey="login" title="Login" className="" >
+                <Login setShow={setShow} />
               </Tab>
               <Tab eventKey="signup" title="Sign Up">
-                <SignUp/>
+                <SignUp activeTab={activeTab} setActiveTab={setActiveTab}   />
               </Tab>
             </Tabs>
       </Modal>
+   
+      
     </div>
   );
 }
+

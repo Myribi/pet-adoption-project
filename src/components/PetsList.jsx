@@ -16,7 +16,9 @@ export default function PetsList() {
       <Row xs={1} md={3} className="g-4">
         {petsList.map((pet) => {
             return (
+              <div key={pet._id}>
                 <PetsCard pet={pet}/>
+                </div>
             )
             })}
             

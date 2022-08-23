@@ -1,57 +1,91 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
 import axios from "axios";
+import {CgDanger} from "react-icons/cg";
+import GeneralContext from "../contexts/CreateContext";
 
-export default function SignUp() {
-  const [fullName,setFullName] = useState("")
-  const [phone,setPhone] = useState("")
-  const [email,setEmail] = useState("")
-  const [password,setPassword] = useState("")
-  const [repassword,setRePassword] = useState("")
+export default function SignUp(props) {
+  const { setActiveTab } = props;
+  const {fullName, setFullName} = useContext(GeneralContext)
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repassword, setRePassword] = useState("");
+  const [error, setError] = useState("");
 
-    const handleSignup = async(e) => {
-      try {
-        e.preventDefault();  
-        const newUser = {
-          name : fullName,
-          phone : phone,
-          email : email,
-          password : password,
-          repassword : repassword
-        }
-        const res = await axios.post('http://localhost:8080/users/signup', newUser)
-        console.log(res.data)
-        
-      } catch (err) {
-         console.log(err)
+  const handleSignup = async (e) => {
+    try {
+      setError("");
+
+      e.preventDefault();
+      const newUser = {
+        name: fullName,
+        phone: phone,
+        email: email,
+        password: password,
+        repassword: repassword,
+      };
+      const res = await axios.post(
+        "http://localhost:8000/users/signup",
+        newUser
+      );
+      console.log(res);
+      if (res.data._id) {
+        window.alert(
+          `You Are Successfully Signed Up! Welcome ${res.data.name}. Please Log In!`
+        );
+        setError("");
+        setActiveTab("login");
       }
-        
-       
-      }
- 
+    } catch (err) {
+      console.log(err);
+      setError(err.response.data);
+    }
+  };
+
   return (
     <Form className="p-3" onSubmit={handleSignup}>
+      <div className={error? "errorMsg mb-2 d-flex align-items-center" : "d-none"}>{<CgDanger className="dangerlogo"/>}{error}</div>
       <Form.Group className="mb-3">
         <Form.Label>Full Name:</Form.Label>
-        <Form.Control onChange={(e)=>setFullName(e.target.value)} type="text" placeholder="Enter full name" />
+        <Form.Control
+          onChange={(e) => setFullName(e.target.value)}
+          type="text"
+          placeholder="Enter full name"
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicNumber">
         <Form.Label>Phone Number:</Form.Label>
-        <Form.Control onChange={(e)=>setPhone(e.target.value)}  type="tel" placeholder="Phone number" />
+        <Form.Control
+          onChange={(e) => setPhone(e.target.value)}
+          type="tel"
+          placeholder="Phone number"
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address:</Form.Label>
-        <Form.Control onChange={(e)=>setEmail(e.target.value)}  type="email" placeholder="Enter email" />
+        <Form.Control
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Enter email"
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password:</Form.Label>
-        <Form.Control onChange={(e)=>setPassword(e.target.value)}  type="password" placeholder="Password" />
+        <Form.Control
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          placeholder="Password"
+        />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPasswordValidation">
         <Form.Label>Verify your password:</Form.Label>
-        <Form.Control onChange={(e)=>setRePassword(e.target.value)}  type="password" placeholder="Password" />
+        <Form.Control
+          onChange={(e) => setRePassword(e.target.value)}
+          type="password"
+          placeholder="Password"
+        />
       </Form.Group>
       <div className="d-flex flex-row-reverse">
         <Button variant="primary" type="submit">

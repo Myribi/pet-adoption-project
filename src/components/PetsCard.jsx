@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 import GeneralContext from "../contexts/CreateContext";
 
 export default function PetsCard({pet}) {
-    const {setCurrentPet} = useContext(GeneralContext);
+    const {setPetCard} = useContext(GeneralContext);
 
-  function currentPetFunc() {
-    setCurrentPet(pet)
+  function petCardFunc() {
+   setPetCard(pet)
   }
 
   return (
     
         <Col>
-          <Card  className="h-100">
+          <Card  className="card" key={pet._id}>
             <div className="card-to-heart">
               <div className="heart-container m-3">
                 <FaRegHeart className="heart"/>
@@ -28,7 +28,7 @@ export default function PetsCard({pet}) {
               <Card.Title className="title" >{pet.name}</Card.Title>
               <Card.Text className="title">{pet.adoptionStatus}</Card.Text>
               </div>
-              <Link to="/petprofile" className='text-decoration-none nav-link' onClick={currentPetFunc}><Button className="title"variant="light">About me!</Button></Link>
+              <Link to={`/petprofile/${pet._id}`} className='text-decoration-none nav-link' onClick={petCardFunc}><Button className="title"variant="light">About me!</Button></Link>
               </div>
             </Card.Body>
           </Card>

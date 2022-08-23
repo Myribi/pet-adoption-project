@@ -1,4 +1,3 @@
-import React from "react";
 
 export default function Home() {
 
@@ -10,9 +9,9 @@ export default function Home() {
         Dreaming of adopting a Dog or a Cat? <br/> You came to the right place! <br/>Use
         our adoption system and find the perfect pet that suits you.
       </p>
-      <div className="footer d-flex">
+      {/* <div className="footer d-flex">
         <h3 className="boop-title">Don't you just want to boop me?</h3>
-      </div>
+      </div> */}
     </div>
   );
 }
