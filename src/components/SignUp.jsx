@@ -50,10 +50,13 @@ export default function SignUp(props) {
       <Form.Group className="mb-3">
         <Form.Label>Full Name:</Form.Label>
         <Form.Control
+          as="input"
+          name="fullName"
           onChange={(e) => setFullName(e.target.value)}
-          type="text"
-          placeholder="Enter full name"
+          onKeyDown={e => e.stopPropagation()}
+          placeholder="Enter full name" 
         />
+
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicNumber">
         <Form.Label>Phone Number:</Form.Label>

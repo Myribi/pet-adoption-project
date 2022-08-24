@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function PetProfile() {
   const [currentPet, setCurrentPet] = useState({})
-  let location = useLocation();
   let navigate = useNavigate();
  
 
@@ -17,10 +16,11 @@ export default function PetProfile() {
   useEffect(() => {
   async function getPet() {
     const res = await axios.get(`http://localhost:8000/pets/${id}`);
+    console.log(res.data)
     setCurrentPet(res.data);
   }
   getPet();
-  }, [location,id])
+  }, [id])
   
 
   return (

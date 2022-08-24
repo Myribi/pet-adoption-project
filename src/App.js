@@ -7,6 +7,8 @@ import Search from "./components/Search";
 import PetProfile from "./components/PetProfile";
 import GeneralContext from "./contexts/CreateContext";
 import { useEffect, useState } from "react";
+import AddPet from "./components/AddPet";
+import UserProfile from "./components/UserProfile";
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
         <Routes>
           <Route path="/" to="/" element={<Home/>} />
           <Route path="/search" to="/search" element={<Search/>} />
+          <Route path="/addpet" to="/addpet" element={<AddPet/>} />
+          <Route path="/profile" to="/profile" element={<UserProfile/>} />
           <Route path="/petprofile/:id" to="/petprofile" element={<PetProfile/>} />
         </Routes>
         </GeneralContext.Provider>
