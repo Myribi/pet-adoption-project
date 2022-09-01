@@ -1,0 +1,88 @@
+{!token? (
+                <>
+                  <p className="pet_profile_information_adopt">
+                    For adopt or foster a pet, LogIn
+                  </p>
+                </>
+              ) : (
+                currentPet.adoptionStatus === "adopted"?
+                (  savedPets.adopted?.find((pet)=> pet._id == currentPet._id)?
+                <>
+                <Button className="blue_button" variant="" onClick={()=> { changePetStatusFunction("available")}}>
+                    Return
+                </Button> 
+                </>:
+                <>  
+                <p className="pet_profile_information_adopt">
+                {currentPet.name} is adopted! 
+            </p> 
+                </>
+                )
+                : 
+                (  savedPets.foster?.find((pet)=> pet._id == currentPet._id)?
+                <>
+                  <Button className="blue_button" variant="" onClick={()=> { changePetStatusFunction("adopted")}}>
+                  Adopt
+                  </Button>
+                  <Button className="blue_button_border " variant="" onClick={()=> { changePetStatusFunction("available")}}>
+                   Return Foster Pet
+                  </Button>
+                </> :
+                <>
+                <Button className="blue_button" variant="" onClick={()=> { changePetStatusFunction("adopted")}}>
+                  Adopt
+                  </Button>
+                  <Button className="blue_button_border " variant="" onClick={()=> { changePetStatusFunction("fostered")}}>
+                   Foster
+                  </Button>
+                </>
+                )
+              )}
+
+
+
+
+
+
+              // {user && currentPet.adoptionStatus === "Available" ?  (
+              //   <>
+              //     <button
+              //       className="pet-btn shadow border-0 px-3 py-1"
+              //       onClick={() => {
+              //         addToFosterOrAdopt("Fostered");
+              //       }}
+              //     >
+              //       Foster
+              //     </button>
+              //     <button
+              //       className="pet-btn shadow border-0 px-3 py-1"
+              //       onClick={() => {
+              //         addToFosterOrAdopt("Adopted");
+              //       }}
+              //     >
+              //       Adopt
+              //     </button>
+              //   </>
+              // ) : user && currentPet.adoptionStatus === "Fostered" ? (favPetsList.fosteredPets?.find((pet)=> pet._id === currentPet._id)? 
+              //   <>
+  
+              //     <button
+              //       className="pet-btn shadow border-0 px-3 py-1"
+              //       onClick={() => {
+              //         addToFosterOrAdopt("Adopted");
+              //       }}
+              //     >
+              //       Adopt
+              //     </button>
+              //     <button className="pet-btn shadow border-0 px-3 py-1">
+              //       Return
+              //     </button>
+              //   </>
+              //  : (user && currentPet.adoptionStatus === "Adopted" ? (favPetsList.adoptedPets?.find((pet)=> pet._id === currentPet._id)? 
+              //   <button className="pet-btn shadow border-0 px-3 py-1">
+              //     Return
+              //   </button>
+              //   : 
+              //   ("")
+              //  ))
+              // }

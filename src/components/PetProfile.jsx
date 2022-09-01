@@ -1,59 +1,207 @@
-import React, { useEffect, useState } from "react";
-import {useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { Col, Row, Image } from "react-bootstrap";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import GeneralContext from "../contexts/CreateContext";
 
-export default function PetProfile() {
-  const [currentPet, setCurrentPet] = useState({})
+export default function PetProfile({ pet }) {
+  const [currentPet, setCurrentPet] = useState({});
   let navigate = useNavigate();
- 
+  const [heart2, setHeart2] = useState(false);
+  const token = JSON.parse(localStorage.getItem("token"));
+  const { user, adoptedFosteredList } = useContext(GeneralContext);
 
   const goingBack = () => {
-    navigate("/search");
+    navigate(-1);
   };
 
   const { id } = useParams();
 
   useEffect(() => {
-  async function getPet() {
-    const res = await axios.get(`http://localhost:8000/pets/${id}`);
-    console.log(res.data)
-    setCurrentPet(res.data);
-  }
-  getPet();
-  }, [id])
-  
+    
+    async function getPet() {
+      const res = await axios.get(`http://localhost:8000/pets/${id}`);
+      setCurrentPet(res.data);
+    }
+    getPet();
+  }, [id]);
 
+  function like() {
+    !heart2 ? setHeart2(true) : setHeart2(false);
+  }
+
+  async function addToFosterOrAdopt(status) {
+    try {
+      const adoptedOrFostered = { petId: currentPet._id, statusChange: status };
+      const res = await axios.post(
+        `http://localhost:8000/pets/${id}/adoptfoster`,
+        adoptedOrFostered,
+        {
+          headers: { authorization: "Bearer " + token },
+        }
+      );
+      localStorage.setItem("user", JSON.stringify(res.data));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+ 
   return (
     <>
-      <h1 className="text-center">
-        Hi! My name is <span className="pet-name">{currentPet.name}</span>
-      </h1>
-      <div className="d-flex flex-column align-items-center">
-        <div className="image-container">
-          <img src={currentPet.picture} alt="" className="pet-profile-image" />
+      <div className="d-flex justify-content-center align-items-center gap-5">
+        <h1>
+          Hi! My name is <span className="pet-name">{currentPet.name}</span>
+        </h1>
+
+        <div onClick={like} className={heart2 ? "cursor " : "cursor "}>
+          {!heart2 ? (
+            <>
+              <FaRegHeart
+                className="heart mb-1"
+                style={{ fontSize: "1.5rem" }}
+              />
+              <FaHeart className="heart2 mb-1" style={{ fontSize: "1.5rem" }} />
+            </>
+          ) : (
+            <>
+              <FaRegHeart
+                className="heart d-none"
+                style={{ fontSize: "1.5rem" }}
+              />
+              <FaHeart
+                className="heart2clicked"
+                style={{ fontSize: "1.5rem" }}
+              />
+            </>
+          )}
         </div>
-        <div>{currentPet.type}</div>
-        <div>{currentPet.breed}</div>
-        <div>{currentPet.adoptionStatus}</div>
-        <div>{currentPet.height}cm</div>
-        <div>{currentPet.weight}lbs</div>
-        <div>{currentPet.color}</div>
-        <div className="text-center">
-          {currentPet.name} {currentPet.bio}
-        </div>
-        <div>{String(currentPet.hypoallergnic)}</div>
-        <div>{currentPet.dietery}</div>
       </div>
 
-      <div className="buttons d-flex justify-content-center mt-5">
-        <button className="pet-btn shadow border-0 px-3 py-1">Return</button>
-        <button className="pet-btn shadow border-0 px-3 py-1">Foster</button>
-        <button className="pet-btn shadow border-0 px-3 py-1">Adopt</button>
-        <button className="pet-btn shadow border-0 px-3 py-1">
-          Add to favourites!
-        </button>
-      </div>
-      <div className="text-center mt-5">
+      <Row className="mx-5 my-4 align-items-center">
+        <Col lg={6}>
+          <Image
+            src={currentPet.picture}
+            alt=""
+            className="pet-profile-image"
+          />
+        </Col>
+
+        <Col lg={6} className="">
+          <div className="d-flex flex-column align-items-center mb-3">
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Type of pet: {currentPet.type}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              breed: {currentPet.breed}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Status: {currentPet.adoptionStatus}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Height: {currentPet.height}cm
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Weight: {currentPet.weight}lbs
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Color: {currentPet.color}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              About Me: {currentPet.bio}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Am I hypoallergenic? {String(currentPet.hypoallergnic)}
+            </div>
+            <div className="pt-2 border-bottom w-100">
+              {" "}
+              Dietary restrictions: {currentPet.dietery}
+            </div>
+          </div>
+
+
+
+
+
+          <div className="buttons d-flex justify-content-center">
+            {!user ? (
+              <>
+                <p className="pet_profile_information_adopt">
+                  Please Log in to interact with all of our friends!
+                </p>
+              </>
+            ) : currentPet.adoptionStatus === "Adopted" ? (
+              adoptedFosteredList?.find((pet) => pet._id === currentPet._id) ? (
+                <button className="pet-btn shadow border-0 px-3 py-1" onClick={() => {
+                  addToFosterOrAdopt("Return");
+                }}>
+                  Return
+                </button>
+              ) : (
+                ""
+              )
+            ) : currentPet.adoptionStatus === "Available" ? (
+              <>
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
+                    addToFosterOrAdopt("Fostered");
+                  }}
+                >
+                  Foster
+                </button>
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
+                    addToFosterOrAdopt("Adopted");
+                  }}
+                >
+                  Adopt
+                </button>
+              </>
+            ) : adoptedFosteredList?.find(
+                (pet) => pet._id === currentPet._id
+              ) ? (
+              <>
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
+                    addToFosterOrAdopt("Adopted");
+                  }}
+                >
+                  Adopt
+                </button>
+                <button className="pet-btn shadow border-0 px-3 py-1" onClick={() => {
+                    addToFosterOrAdopt("Return");
+                  }}>
+                  Return
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
+                    addToFosterOrAdopt("Adopted");
+                  }}
+                >
+                  Adopt
+                </button>
+              </>
+            )}
+          </div>
+        </Col>
+      </Row>
+
+      <div className="p-5 text-center">
         <button
           className="pet-btn shadow border-0 px-3 py-1"
           onClick={goingBack}
