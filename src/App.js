@@ -12,6 +12,7 @@ import UserProfile from "./components/UserProfile";
 import PrivateRoute from "./PrivateRoute";
 import MyPets from "./components/MyPets";
 import axios from "axios";
+import EditPet from "./components/EditPet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -24,6 +25,7 @@ function App() {
   const [fullName, setFullName] = useState("");
   const [token, setToken] = useState("");
   const [userName, setUserName] = useState(user?.user);
+  const [currentPet, setCurrentPet] = useState({});
  
 
   useEffect(() => {
@@ -38,6 +40,7 @@ function App() {
     if (token) {
       fetchFavPetsList();
       fetchFosteredAdoptedPets();
+      
     } // eslint-disable-next-line
   }, [token]);
 
@@ -65,6 +68,8 @@ function App() {
   }
 
   
+
+
   async function fetchFosteredAdoptedPets() {
     try {
       const res = await axios.get(
@@ -106,6 +111,8 @@ function App() {
             adoptedFosteredList,
             setAdoptedFosteredList,
             fetchFosteredAdoptedPets,
+            currentPet, 
+            setCurrentPet
           }}
         >
           <NavBar />
@@ -144,7 +151,17 @@ function App() {
               to="/petprofile"
               element={<PetProfile />}
             />
+                <Route
+              path="/editpet/:id"
+              to="/editpet"
+              element={
+                <PrivateRoute>
+                  <EditPet />
+                </PrivateRoute>
+              }
+            />
           </Routes>
+      
         </GeneralContext.Provider>
       </BrowserRouter>
     </div>

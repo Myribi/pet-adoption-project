@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function PetsCard({ pet }) {
   const token = JSON.parse(localStorage.getItem("token"));
-  const { favPetsList, addFavouritePet, removeFavouritePet } =
+  const { favPetsList, addFavouritePet, removeFavouritePet} =
     useContext(GeneralContext);
   const [heart, setHeart] = useState(false);
 

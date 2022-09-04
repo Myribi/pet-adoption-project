@@ -4,10 +4,10 @@ import Tabs from "react-bootstrap/Tabs";
 import AdOrFostered from "../AdOrFostered";
 import GeneralContext from "../contexts/CreateContext";
 import FavPets from "./FavPets";
-import axios from "axios";
+
 
 export default function MyPets() {
-  const { fetchFavPetsList, fetchFosteredAdoptedPets } = useContext(GeneralContext);
+  const { fetchFavPetsList, fetchFosteredAdoptedPets,adoptedFosteredList,favPetsList } = useContext(GeneralContext);
 
   
 
@@ -23,10 +23,12 @@ export default function MyPets() {
     <div className="mypets">
       <Tabs className="" justify>
         <Tab eventKey="mypets" title="My adopted/fostered pets">
-          <AdOrFostered/>
+          {adoptedFosteredList.length>0?  <AdOrFostered/> : <div className="text-center mt-5">You currently don't own or foster any pets...</div>}
+         
         </Tab>
         <Tab eventKey="myfavpets" title="My favourites pets">
-          <FavPets />
+        {favPetsList.length>0?   <FavPets /> : <div className="text-center mt-5">You currently don't have any favourites...</div>}
+         
         </Tab>
       </Tabs>
     </div>

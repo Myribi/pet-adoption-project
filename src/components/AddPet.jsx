@@ -36,9 +36,14 @@ export default function AddPet() {
       petInfo.append("dietery", dietery);
       petInfo.append("breed", breed);
 
-      await axios.post("http://localhost:8000/pets/addpet", petInfo, {
+      const res = await axios.post("http://localhost:8000/pets/addpet", petInfo, {
         headers: { authorization: "Bearer " + token },
       });
+      if(res.data) {
+        window.alert(
+            `You successfully added among our furry friends ${name}!`
+          );
+     }
     } catch (err) {
       setAddPetError(err.response.data);
     }
@@ -51,6 +56,7 @@ export default function AddPet() {
   return (
     <div className="w-50 m-auto">
       {addPetError ? <div>{addPetError}</div> : ""}
+      <h1 className="text-center">Add a new friend!</h1>
       <Form className="p-3" onSubmit={handleAddPet}>
         <Form.Group className="mb-3">
           <Form.Label>Type of pet:</Form.Label>

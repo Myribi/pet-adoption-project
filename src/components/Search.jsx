@@ -1,4 +1,4 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
@@ -6,12 +6,14 @@ import PetsList from "./PetsList";
 import GeneralContext from "../contexts/CreateContext";
 import { Col, Row } from "react-bootstrap";
 
-export default function Search(pet) {
-  const { petsList, setPetsList } = useContext(GeneralContext);
+export default function Search() {
+  const { petsList, setPetsList,setCurrentPet } = useContext(GeneralContext);
   const [switched, setswitched] = useState(false);
   const [formData, setFormData] = useState({});
   const [searchError, setSearchError] = useState("");
-  
+
+
+
 
   const handleChange = async (e) => {
     setSearchError("");
@@ -26,9 +28,7 @@ export default function Search(pet) {
     setFormData(tempFormData);
   };
 
-
   async function getList(e) {
-    e.preventDefault();
     try {
       if (formData.name === "") delete formData.name;
       const res = await axios.get(`http://localhost:8000/pets`, {
@@ -40,18 +40,29 @@ export default function Search(pet) {
           "There doesn't seem to be any friend under those criterias..."
         );
       }
-      
+
       setPetsList(res.data);
     } catch (err) {
       setSearchError(err.response.data);
     }
   }
 
+  async function listRerending() {
+    const res = await axios.get(`http://localhost:8000/pets`)
+    setPetsList(res.data);
+  }
+
+useEffect(() => {
+  listRerending()
+}, [])
+
+
+
   return (
     <>
       <h1 className="mt-5 text-center">Find your future furry best friend!</h1>
       <div className="d-flex flex-column align-items-center">
-        <Form className="type mt-5 searchList" onSubmit={getList}>
+        <Form className="type mt-5 searchList">
           <Form.Select className="mb-2" name="type" onChange={handleChange}>
             <option value="all">Type of animal</option>
             <option value="Dog">Dog</option>
@@ -123,6 +134,7 @@ export default function Search(pet) {
               id="button-addon2"
               className="mt-2 mb-5"
               type="submit"
+              onClick={getList}
             >
               Search
             </Button>

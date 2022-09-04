@@ -32,7 +32,6 @@ export default function UserProfile() {
         newUserData,
         { headers: { authorization: "Bearer " + token } }
       );
-
       localStorage.setItem("user", JSON.stringify(res.data));
     } catch (err) {
       setProfileError(err.response.data);

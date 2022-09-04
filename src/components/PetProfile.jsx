@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Col, Row, Image } from "react-bootstrap";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import GeneralContext from "../contexts/CreateContext";
 
 export default function PetProfile({ pet }) {
-  const [currentPet, setCurrentPet] = useState({});
+ 
   let navigate = useNavigate();
   const [heart2, setHeart2] = useState(false);
   const token = JSON.parse(localStorage.getItem("token"));
-  const { user, adoptedFosteredList } = useContext(GeneralContext);
+  const { user, adoptedFosteredList,currentPet, setCurrentPet,fetchFosteredAdoptedPets } = useContext(GeneralContext);
 
   const goingBack = () => {
     navigate(-1);
@@ -19,13 +19,9 @@ export default function PetProfile({ pet }) {
   const { id } = useParams();
 
   useEffect(() => {
-    
-    async function getPet() {
-      const res = await axios.get(`http://localhost:8000/pets/${id}`);
-      setCurrentPet(res.data);
-    }
     getPet();
-  }, [id]);
+  },// eslint-disable-next-line 
+   [id]);
 
   function like() {
     !heart2 ? setHeart2(true) : setHeart2(false);
@@ -41,12 +37,21 @@ export default function PetProfile({ pet }) {
           headers: { authorization: "Bearer " + token },
         }
       );
-      localStorage.setItem("user", JSON.stringify(res.data));
+        getPet();
+      
     } catch (err) {
       console.log(err);
     }
   }
- 
+
+  async function getPet() {
+    const res = await axios.get(`http://localhost:8000/pets/${id}`);
+    setCurrentPet(res.data);
+  }
+
+
+
+
   return (
     <>
       <div className="d-flex justify-content-center align-items-center gap-5">
@@ -127,10 +132,6 @@ export default function PetProfile({ pet }) {
             </div>
           </div>
 
-
-
-
-
           <div className="buttons d-flex justify-content-center">
             {!user ? (
               <>
@@ -140,9 +141,12 @@ export default function PetProfile({ pet }) {
               </>
             ) : currentPet.adoptionStatus === "Adopted" ? (
               adoptedFosteredList?.find((pet) => pet._id === currentPet._id) ? (
-                <button className="pet-btn shadow border-0 px-3 py-1" onClick={() => {
-                  addToFosterOrAdopt("Return");
-                }}>
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
+                    addToFosterOrAdopt("Return");
+                  }}
+                >
                   Return
                 </button>
               ) : (
@@ -179,9 +183,12 @@ export default function PetProfile({ pet }) {
                 >
                   Adopt
                 </button>
-                <button className="pet-btn shadow border-0 px-3 py-1" onClick={() => {
+                <button
+                  className="pet-btn shadow border-0 px-3 py-1"
+                  onClick={() => {
                     addToFosterOrAdopt("Return");
-                  }}>
+                  }}
+                >
                   Return
                 </button>
               </>
@@ -200,16 +207,36 @@ export default function PetProfile({ pet }) {
           </div>
         </Col>
       </Row>
-
-      <div className="p-5 text-center">
-        <button
-          className="pet-btn shadow border-0 px-3 py-1"
-          onClick={goingBack}
-        >
+      {user.admin === true ? (
+        <>
           {" "}
-          Go Back!
-        </button>
-      </div>
+          <div className="p-5  d-flex justify-content-center">
+          <Link to={`/editpet/${currentPet._id}`} className="text-decoration-none nav-link"> 
+            <button className="pet-btn shadow border-0 px-3 py-1">
+              Edit pet
+            </button></Link>
+         
+            <Link to="/search" className="text-decoration-none nav-link"><button
+              className="pet-btn shadow border-0 px-3 py-1"
+            >
+              Go Back!
+            </button></Link>
+          </div>
+        </>
+      ) : (
+        <div className="p-5 text-center">
+          <button
+            className="pet-btn shadow border-0 px-3 py-1"
+            onClick={goingBack}
+          >
+            {" "}
+            Go Back!
+          </button>
+        </div>
+      )}
     </>
   );
 }
+
+
+
